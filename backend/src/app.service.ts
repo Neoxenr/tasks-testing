@@ -1,10 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { sh } from './utilities';
 import { readFile } from 'fs/promises';
+import { VerifyDto } from './app.controller';
 
 @Injectable()
 export class AppService {
-  async verify(): Promise<boolean> {
+  async verify(verifyDto: VerifyDto): Promise<boolean> {
     try {
       // git clone
       // docker pull
@@ -13,9 +14,9 @@ export class AppService {
       // free resources
 
       await sh(
-        'git clone https://gitlab.com/graduate-work2/code-example.git -b test-task /var/tmp/code-example/',
+        `git clone ${verifyDto.repository} -b ${verifyDto.branch} /var/tmp/code-example/`,
       );
-
+      // https://gitlab.com/graduate-work2/code-example.git
       await sh('docker pull neoxenr/typescript-testing');
 
       await sh(
@@ -33,8 +34,9 @@ export class AppService {
       console.error(err);
 
       return false;
-    } finally {
-      await sh('rm -rf /var/tmp/code-example');
     }
+    // finally {
+    //   await sh('rm -rf /var/tmp/code-example');
+    // }
   }
 }
