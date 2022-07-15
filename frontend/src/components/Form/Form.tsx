@@ -1,5 +1,5 @@
 import React, { ReactElement, useState, useEffect } from 'react';
-import { Navigate, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import {
   Button, Col, Form, Input, Modal, Result, Row
@@ -8,6 +8,9 @@ import {
 import { BranchesOutlined, GithubOutlined } from '@ant-design/icons';
 
 import './style.css';
+import { useDispatch } from 'react-redux';
+import { setResult } from '../../store/slices';
+import { AppDispatch } from '../../store/store';
 
 export type VerifyDto = {
   repository: string;
@@ -17,11 +20,12 @@ export type VerifyDto = {
 export function CheckoutForm(): ReactElement {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isPassed, setIsPassed] = useState(false);
-  const [isLogging, setIsChecking] = useState(false);
+  const [isChecking, setIsChecking] = useState(false);
 
   const [form] = Form.useForm();
 
   const navigate = useNavigate();
+  const dispatch: AppDispatch = useDispatch();
 
   const handleOk = () => {
     setIsModalVisible(false);
@@ -40,7 +44,12 @@ export function CheckoutForm(): ReactElement {
         'Content-Type': 'application/json',
       },
     })
-      .then((response: any) => setIsPassed(response))
+      .then((response: any) => response.json())
+      .then((json) => {
+        dispatch(setResult(json));
+        return json;
+      })
+      .then((json) => setIsPassed(json.success))
       .then(() => setIsChecking(false))
       .then(() => setIsModalVisible(true));
   };
@@ -58,7 +67,7 @@ export function CheckoutForm(): ReactElement {
       repository: 'https://gitlab.com/graduate-work2/code-example.git',
       branch: 'test-task',
     });
-  }, []);
+  }, [isModalVisible, isPassed, isChecking, navigate, form]);
 
   return (
     <Row
@@ -100,7 +109,7 @@ export function CheckoutForm(): ReactElement {
           </Form.Item>
           <Form.Item>
             <Button
-              loading={isLogging}
+              loading={isChecking}
               type="primary"
               htmlType="submit"
               className="test-form__button"
@@ -112,7 +121,7 @@ export function CheckoutForm(): ReactElement {
         <Modal visible={isModalVisible} onOk={handleOk} onCancel={handleCancel}>
           <Result
             status={isPassed ? 'success' : 'error'}
-            title="Тесты успешно пройдены"
+            title={isPassed ? 'Тесты успешно пройдены' : 'Тесты не пройдены'}
             extra={[
               <Button onClick={handleOnClick} type="primary" key="console">
                 Результаты

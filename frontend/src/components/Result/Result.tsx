@@ -1,20 +1,9 @@
-import React, { ReactElement, useEffect, useState } from 'react';
+import React, { ReactElement } from 'react';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../store/store';
 
 export function Result(): ReactElement {
-  const [result, setResult] = useState({});
+  const result = useSelector((state: RootState) => state.result.json);
 
-  const getResult = async () => {
-    setResult(
-      await fetch('/var/tmp/code-example/output.json').then((response) => {
-        console.log(response.json());
-        return response.json();
-      }),
-    );
-  };
-
-  useEffect(() => {
-    getResult();
-  }, [result]);
-
-  return <div>{JSON.stringify(result)}</div>;
+  return <div><pre>{JSON.stringify(result, null, 4)}</pre></div>;
 }

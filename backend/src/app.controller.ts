@@ -10,8 +10,8 @@ export type VerifyDto = {
 export class AppController {
   constructor(private readonly appService: AppService) {}
 
-  @Post('')
-  async verify(@Body() verifyDto: VerifyDto): Promise<boolean> {
+  @Post()
+  async verify(@Body() verifyDto: VerifyDto): Promise<any> {
     return this.appService.verify(verifyDto);
   }
 }
