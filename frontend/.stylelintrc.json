@@ -1,0 +1,13 @@
+{
+  "extends": ["stylelint-config-recommended", "stylelint-config-standard"],
+  "rules": {
+    "declaration-empty-line-before": [
+      "always",
+      {
+        "ignore": ["after-declaration"]
+      }
+    ],
+    "comment-whitespace-inside": "never",
+    "selector-class-pattern": null
+  }
+}
