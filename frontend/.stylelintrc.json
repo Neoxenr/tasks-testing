@@ -6,8 +6,6 @@
       {
         "ignore": ["after-declaration"]
       }
-    ],
-    "comment-whitespace-inside": "never",
-    "selector-class-pattern": null
+    ]
   }
 }

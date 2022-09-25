@@ -1,3 +1,7 @@
+:root {
+  --code-field-color: #e8e8e8;
+}
+
 body {
 
   margin: 0;
@@ -22,7 +26,6 @@ code {
     monospace;
 }
 
-.ant-layout-content:nth-of-type(1) {
-
+.ant-layout-content:nth-of-type(1) { 
   background-color: #fff;
 }
