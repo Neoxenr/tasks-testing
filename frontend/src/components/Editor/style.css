@@ -1,0 +1,14 @@
+.editor {
+
+  margin: 10px;
+  width: 45%;
+}
+
+.editor__code textarea {
+
+  background-color: var(--code-field-color);
+}
+
+.editor__submit-btn {
+  margin-bottom: 20px;
+}
