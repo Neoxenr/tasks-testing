@@ -1,7 +1,7 @@
-import { Injectable } from '@nestjs/common';
 import { sh } from './utilities';
 import { readFile } from 'fs/promises';
 import { VerifyDto } from './app.controller';
+import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class AppService {
@@ -29,8 +29,5 @@ export class AppService {
 
       return {};
     }
-    // finally {
-    //   await sh('rm -rf /var/tmp/code-example');
-    // }
   }
 }

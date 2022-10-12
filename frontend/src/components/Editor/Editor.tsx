@@ -1,23 +1,55 @@
-import React, { ReactElement } from 'react';
+import React, { ReactElement, useState } from 'react';
 import {
-  Button, Form, Input, Select, Space
+  Button, Form, Input, Select
 } from 'antd';
-import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
+import { useDispatch } from 'react-redux';
+import { AppDispatch } from '../../store/store';
 
 import './style.css';
+import { addTask } from '../../store/slices';
 
 export function Editor(): ReactElement {
+  const dispatch: AppDispatch = useDispatch();
+
+  const [isLoading, setIsLoading] = useState(false);
+
   return (
     <Form
       name="editor"
       className="editor"
       layout="vertical"
-      initialValues={{ language: 'JavaScript' }}
+      initialValues={{ language: 'JS' }}
+      onFinish={(formData) => {
+        setIsLoading(true);
+        fetch('http://localhost:8080/task', {
+          method: 'POST',
+          body: JSON.stringify({
+            ...formData,
+            userId: 'd577e0e8-877b-482f-a7ee-fca43e14aff6',
+          }),
+          headers: new Headers({
+            'Content-Type': 'application/json',
+          }),
+        })
+          .then((response) => response.json())
+          .then((json) => {
+            setIsLoading(false);
+            dispatch(addTask(json));
+          });
+      }}
     >
-      <Form.Item label="Наименование" name="name" initialValue="test">
+      <Form.Item
+        label="Наименование"
+        name="title"
+        initialValue="Title for test task"
+      >
         <Input placeholder="Название задания" />
       </Form.Item>
-      <Form.Item label="Описание" name="description" initialValue="test">
+      <Form.Item
+        label="Описание"
+        name="description"
+        initialValue="Description for test task"
+      >
         <Input.TextArea
           allowClear
           placeholder="Описание задания"
@@ -26,22 +58,23 @@ export function Editor(): ReactElement {
       </Form.Item>
       <Form.Item label="Выберите язык программирования" name="language">
         <Select>
-          <Select.Option value="JavaScript">JavaScript</Select.Option>
-          <Select.Option value="Python">Python</Select.Option>
+          <Select.Option value="JS">JS</Select.Option>
         </Select>
       </Form.Item>
       <Form.Item
         label="Docker-образ"
-        name="docker-image"
+        name="dockerImageName"
         initialValue="neoxenr/typescript"
+        rules={[{ required: true, message: 'Не указан Docker-образ' }]}
       >
         <Input placeholder="Название образа" />
       </Form.Item>
       <Form.Item
         className="editor__code"
         label="Ответ"
-        name="answer"
-        initialValue="console.log(123);"
+        name="mainCode"
+        initialValue="export function isPalindrome(str) { /* Ваш ответ */ }"
+        rules={[{ required: true, message: 'Пропущен ответ' }]}
       >
         <Input.TextArea
           showCount
@@ -50,7 +83,56 @@ export function Editor(): ReactElement {
           placeholder="Код"
         />
       </Form.Item>
-      <Form.List name="tests">
+      <Form.Item
+        label="Тесты"
+        className="editor__code"
+        name="testCode"
+        initialValue="describe('String should be a palindrome', () => {
+          it('Test 1', () => {
+            const str: string = '11211';
+
+            expect(isPalindrome(str)).toBeTruthy();
+          })
+          it('Test 2', () => {
+            const str: string = 'abcghgcba';
+
+            expect(isPalindrome(str)).toBeTruthy();
+          });
+          it('Test 3', () => {
+            const str: string = '';
+
+            expect(isPalindrome(str)).toBeTruthy();
+          });
+        });
+
+        describe('String shouldn't be a palindrome', () => {
+          it('Test 1', () => {
+            const str: string = '123456';
+
+            expect(isPalindrome(str)).toBeFalsy();
+          });
+          it('Test 2', () => {
+            const str: string = 'abaaabbb';
+
+            expect(isPalindrome(str)).toBeFalsy();
+          });
+          it('Test 3', () => {
+            const str: string = 'adsadadadaaaadaddad';
+
+            expect(isPalindrome(str)).toBeFalsy();
+          })
+        });
+        "
+        rules={[{ required: true, message: 'Пропущен код для тестов' }]}
+      >
+        <Input.TextArea
+          showCount
+          allowClear
+          autoSize={{ minRows: 6, maxRows: 6 }}
+          placeholder="Код для тестов"
+        />
+      </Form.Item>
+      {/* <Form.List name="tests">
         {(fields, { add, remove }) => (
           <>
             {fields.map(({ key, name, ...restField }) => (
@@ -70,25 +152,30 @@ export function Editor(): ReactElement {
                   rules={[
                     {
                       required: true,
-                      message: 'Пропущено наименование теста',
+                      message: 'Пропущено наименование группы тестов',
                     },
                   ]}
                 >
-                  <Input placeholder="Наименование теста" />
+                  <Input placeholder="Наименование группы тестов" />
                 </Form.Item>
                 <Form.Item
                   {...restField}
                   className="editor__code"
                   rules={[
-                    { required: true, message: 'Пропущен код для теста' },
+                    { required: true, message: 'Пропущен код для тестов' },
                   ]}
                 >
                   <Input.TextArea
                     showCount
                     allowClear
                     autoSize={{ minRows: 6, maxRows: 6 }}
-                    placeholder="Код для теста"
-                    defaultValue="console.log(123);"
+                    placeholder="Код для тестов"
+                    defaultValue="it('test 1', () => {
+                      const str: string = '11211';
+
+                      expect(isPalindrome(str)).toBeTruthy();
+                    })
+                  "
                   />
                   <MinusCircleOutlined onClick={() => remove(name)} />
                 </Form.Item>
@@ -106,9 +193,10 @@ export function Editor(): ReactElement {
             </Form.Item>
           </>
         )}
-      </Form.List>
+      </Form.List> */}
       <Form.Item>
         <Button
+          loading={isLoading}
           className="editor__submit-btn"
           type="primary"
           htmlType="submit"
