@@ -14,12 +14,11 @@ const taskSlice = createSlice({
   initialState,
   reducers: {
     addTask: (state, action) => {
-      console.log(action.payload);
       state.tasks.push(action.payload);
     },
     setTasks: (state, action) => {
       state.tasks = action.payload;
-    }
+    },
   },
 });
 

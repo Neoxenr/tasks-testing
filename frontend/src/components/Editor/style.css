@@ -1,16 +1,10 @@
 .editor {
 
-  margin: 10px;
-  width: 45%;
-  padding: 5px;
+  margin-top: 30px;
+  width: 60%;
 }
 
 .editor__code textarea {
 
   background-color: var(--code-field-color);
-}
-
-.editor__submit-btn {
-  
-  margin-bottom: 20px;
 }

@@ -1,4 +1,9 @@
 .task-container {
 
-  width: 45%;
+  margin-top: 30px;
+}
+
+.task-container__btn-group {
+
+  margin-bottom: 10px;
 }

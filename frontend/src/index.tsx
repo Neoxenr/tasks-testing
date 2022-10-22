@@ -1,14 +1,16 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+
+import { Provider } from 'react-redux';
+import { store } from './store';
 
 import 'antd/dist/antd.css';
 import './index.css';
 
-import { Provider } from 'react-redux';
-
 import { Editor } from './components/Editor';
 import { Tasks } from './components/Tasks';
-import { store } from './store';
+import { Task } from './components/Tasks/components';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement,
@@ -17,8 +19,13 @@ const root = ReactDOM.createRoot(
 root.render(
   <React.StrictMode>
     <Provider store={store}>
-      <Editor />
-      <Tasks />
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Tasks />} />
+          <Route path="/editor" element={<Editor />} />
+          <Route path="/task/:id" element={<Task />} />
+        </Routes>
+      </BrowserRouter>
     </Provider>
   </React.StrictMode>,
 );

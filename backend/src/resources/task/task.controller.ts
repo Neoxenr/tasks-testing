@@ -19,11 +19,9 @@ export class TaskController {
 
   @Post()
   async create(@Body() createTaskDto: CreateTaskDto): Promise<Task> {
-    console.log(123);
-    console.log(createTaskDto);
     return this.taskService.create(createTaskDto);
   }
-
+  // пусть возвр не все поля
   @Get()
   async findAll(): Promise<Task[]> {
     return this.taskService.findAll();

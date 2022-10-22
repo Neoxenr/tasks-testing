@@ -10,4 +10,14 @@ export type TaskDto = {
   mainCode: string;
 
   testCode: string;
-}
+};
+
+export type TaskVerifyDto = {
+  language: string;
+
+  dockerImageName: string;
+
+  testCode: string;
+
+  solutionCode: string;
+};

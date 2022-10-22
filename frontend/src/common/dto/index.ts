@@ -1,1 +1,1 @@
-export type { TaskDto } from './task/types';
+export type { TaskDto, TaskVerifyDto } from './task/types';

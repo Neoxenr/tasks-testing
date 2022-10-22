@@ -1,33 +1,43 @@
 import { sh } from './utilities';
-import { readFile } from 'fs/promises';
-import { VerifyDto } from './app.controller';
 import { Injectable } from '@nestjs/common';
+import { VerifyDto } from './dto/verify.dto';
 
 @Injectable()
 export class AppService {
-  async verify(verifyDto: VerifyDto): Promise<any> {
+  async verify(
+    userId: string,
+    taskId: string,
+    verifyDto: VerifyDto,
+  ): Promise<any> {
+    const testingDirectory = '/var/tmp/testing';
+
     try {
-      await sh('rm -rf /var/tmp/code-example');
+      await sh(`docker pull ${verifyDto.dockerImageName}`);
 
+      await sh(`mkdir ${testingDirectory}`);
+
+      switch (verifyDto.language) {
+        case 'JS':
+          await sh(
+            `echo "${verifyDto.solutionCode}" > ${testingDirectory}/index.js && echo ${testingDirectory}/"${verifyDto.testCode}" > test.js`,
+          );
+      }
+
+      // команда для запуска тестов (аргументы) npm test
+      // $? и stdout/stderr
       await sh(
-        `git clone ${verifyDto.repository} -b ${verifyDto.branch} /var/tmp/code-example/`,
+        `docker run --rm -v ${testingDirectory}:/app/task ${verifyDto.dockerImageName}:latest`,
       );
 
-      await sh('docker pull neoxenr/typescript-testing');
-
-      await sh(
-        'docker run --rm --name testing -v /var/tmp/code-example:/app/task/ neoxenr/typescript-testing:latest npm run test',
+      const result = await sh('echo $?').then(({ stdout }) =>
+        stdout.slice(0, stdout.indexOf('\n')),
       );
 
-      const result: any = await readFile(
-        '/var/tmp/code-example/output.json',
-      ).then((response: any) => JSON.parse(response));
-
-      return result;
+      return { success: result === '0' ? true : false };
     } catch (err: any) {
-      console.error(err);
-
-      return {};
+      return { success: false };
+    } finally {
+      await sh(`rm -rf ${testingDirectory}`);
     }
   }
 }
