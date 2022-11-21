@@ -1,4 +1,3 @@
-/* eslint-disable no-nested-ternary */
 import React, { ReactElement, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import {
@@ -9,6 +8,7 @@ import { TaskVerifyDto } from '../../../../common/dto';
 import { TaskEntity } from '../../../../common/entity';
 
 import './style.css';
+import { TaskVerifyResponseDto } from '../../../../common/dto/task/types';
 
 export function Task(): ReactElement {
   const { id } = useParams();
@@ -19,15 +19,15 @@ export function Task(): ReactElement {
   }>({ task: null, isLoading: true });
 
   const [taskVerifyRequest, setTaskVerifyRequest] = useState<{
-    verifyResult: { success: boolean } | null;
+    verifyResponse: TaskVerifyResponseDto | null;
     isChecking: boolean;
-  }>({ verifyResult: null, isChecking: false });
+  }>({ verifyResponse: null, isChecking: false });
 
   const { task, isLoading } = taskRequest;
-  const { verifyResult, isChecking } = taskVerifyRequest;
+  const { verifyResponse, isChecking } = taskVerifyRequest;
 
   const handleOnFinish = async (formData: any) => {
-    setTaskVerifyRequest({ verifyResult: null, isChecking: true });
+    setTaskVerifyRequest({ verifyResponse: null, isChecking: true });
 
     fetch(`http://localhost:8080/verify/${task?.userId}/${task?.id}`, {
       method: 'POST',
@@ -42,7 +42,7 @@ export function Task(): ReactElement {
       } as TaskVerifyDto),
     })
       .then((response) => response.json())
-      .then((json) => setTaskVerifyRequest({ verifyResult: json, isChecking: false }));
+      .then((json) => setTaskVerifyRequest({ verifyResponse: json, isChecking: false }));
   };
 
   useEffect(() => {
@@ -63,8 +63,8 @@ export function Task(): ReactElement {
     />
   ) : (
     <div className="task">
-      <h3 className="task__title">{task ? task.title : ''}</h3>
-      <p className="task__description">{task ? task.description : ''}</p>
+      <h3 className="task__title">{task?.title}</h3>
+      <p className="task__description">{task?.description}</p>
       <Form
         className="task__solution-form"
         name="solution"
@@ -74,7 +74,7 @@ export function Task(): ReactElement {
         <Form.Item
           label="Решение"
           name="solutionCode"
-          initialValue={task ? task.mainCode : ''}
+          initialValue={task?.mainCode}
         >
           <Input.TextArea
             style={{ height: 400 }}
@@ -83,21 +83,15 @@ export function Task(): ReactElement {
           />
         </Form.Item>
         <Form.Item>
-          {verifyResult === null ? (
-            <Button
-              className="task__submit-btn"
-              type="primary"
-              htmlType="submit"
-              loading={isChecking}
-              block
-            >
-              Проверить задание
-            </Button>
-          ) : verifyResult.success ? (
-            <div>good</div>
-          ) : (
-            <div>not good</div>
-          )}
+          <Button type="primary" htmlType="submit" loading={isChecking}>
+            Проверить задание
+          </Button>
+          <div>
+            <div>{`PASSED: ${verifyResponse?.passed}`}</div>
+            <div>{`OUTPUT: ${verifyResponse?.output}`}</div>
+            <div>{`RESULT: ${verifyResponse?.result}`}</div>
+            <div>{`STATUS: ${verifyResponse?.status}`}</div>
+          </div>
         </Form.Item>
       </Form>
     </div>

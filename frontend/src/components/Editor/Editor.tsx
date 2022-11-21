@@ -97,7 +97,7 @@ export function Editor(): ReactElement {
             const str = '11211';
 
             expect(isPalindrome(str)).toBeTruthy();
-          })
+          });
           it('Test 2', () => {
             const str = 'abcghgcba';
 
@@ -110,7 +110,7 @@ export function Editor(): ReactElement {
           });
         });
 
-        describe('String shouldn't be a palindrome', () => {
+        describe('String shouldnt be a palindrome', () => {
           it('Test 1', () => {
             const str = '123456';
 
@@ -125,7 +125,7 @@ export function Editor(): ReactElement {
             const str = 'adsadadadaaaadaddad';
 
             expect(isPalindrome(str)).toBeFalsy();
-          })
+          });
         });
         "
         rules={[{ required: true, message: 'Пропущен код для тестов' }]}
@@ -142,7 +142,6 @@ export function Editor(): ReactElement {
           className="editor__submit-btn"
           type="primary"
           htmlType="submit"
-          block
         >
           Создать задание
         </Button>

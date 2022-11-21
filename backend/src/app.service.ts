@@ -19,23 +19,46 @@ export class AppService {
       switch (verifyDto.language) {
         case 'JS':
           await sh(
-            `echo "${verifyDto.solutionCode}" > ${testingDirectory}/index.js && echo ${testingDirectory}/"${verifyDto.testCode}" > test.js`,
+            `echo "${verifyDto.solutionCode}" > ${testingDirectory}/index.js && \ 
+            echo "${verifyDto.testCode}" > ${testingDirectory}/test.js`,
           );
       }
 
-      // команда для запуска тестов (аргументы) npm test
-      // $? и stdout/stderr
+      let output = '';
+
       await sh(
-        `docker run --rm -v ${testingDirectory}:/app/task ${verifyDto.dockerImageName}:latest`,
-      );
+        `docker run --name testing-${verifyDto.language} -v ${testingDirectory}:/app/task \
+        ${verifyDto.dockerImageName}:latest npm test 2>&1 | tee ${testingDirectory}/output`,
+      ).then(({ stdout }) => (output = stdout));
 
-      const result = await sh('echo $?').then(({ stdout }) =>
-        stdout.slice(0, stdout.indexOf('\n')),
-      );
+      const exitStatus = await sh(
+        'docker container inspect --format "{{.State.ExitCode}}" $(docker container ls -lq)',
+      ).then(({ stdout }) => stdout.slice(0, stdout.indexOf('\n')));
 
-      return { success: result === '0' ? true : false };
+      await sh(`docker rm testing-${verifyDto.language}`);
+
+      let result = '';
+
+      if (exitStatus === '0') {
+        result = 'passed';
+      } else if (exitStatus === '124') {
+        result = 'failed-infinity';
+      } else {
+        result = 'failed';
+      }
+
+      const passed = result === 'passed';
+
+      // сохрани в бд
+
+      return {
+        passed: passed,
+        output: output,
+        result: result,
+        status: exitStatus,
+      };
     } catch (err: any) {
-      return { success: false };
+      return { passed: false, output: '', result: 'failed', status: 1 };
     } finally {
       await sh(`rm -rf ${testingDirectory}`);
     }
