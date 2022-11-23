@@ -7,9 +7,9 @@ import { TaskEntity } from '../../common/entity';
 import { setTasks } from '../../store/slices';
 import { AppDispatch, RootState } from '../../store/store';
 
-import './style.css';
-
 import { TaskPreview } from './components';
+
+import './style.css';
 
 export function Tasks(): ReactElement {
   const navigate: NavigateFunction = useNavigate();

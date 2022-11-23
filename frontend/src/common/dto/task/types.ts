@@ -1,4 +1,6 @@
-export type TaskDto = {
+import { TaskEntity } from '../../entity';
+
+export type TaskCreateRequestDto = {
   title: string;
   language: string;
   description: string;
@@ -7,7 +9,12 @@ export type TaskDto = {
   testCode: string;
 };
 
-export type TaskVerifyDto = {
+export type TaskGetRequestDto = {
+  task: TaskEntity | null;
+  isLoading: boolean;
+};
+
+export type TaskVerifyRequestDto = {
   language: string;
   dockerImageName: string;
   testCode: string;

@@ -1,13 +1,29 @@
-import React, { ReactElement, useState } from 'react';
+// React
+import React, { ReactElement, useEffect, useState } from 'react';
 import { NavigateFunction, useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+
+// Antd
 import {
   Button, Form, Input, Select
 } from 'antd';
-import { useDispatch } from 'react-redux';
-import { AppDispatch } from '../../store/store';
-import { addTask } from '../../store/slices';
-import { TaskDto } from '../../common/dto';
 
+// CodeMirror
+import CodeMirror from '@uiw/react-codemirror';
+
+// Store
+import { AppDispatch } from '../../store/store';
+
+// Slices
+import { addTask } from '../../store/slices';
+
+// Languages extension
+import { languagesExtension } from '../../config';
+
+// Dto
+import { TaskCreateRequestDto } from '../../common/dto';
+
+// CSS
 import './style.css';
 
 export function Editor(): ReactElement {
@@ -16,7 +32,9 @@ export function Editor(): ReactElement {
 
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleOnFish = async (formData: any) => {
+  let selectedLanguage = 'JS';
+
+  const handleOnFinish = async (formData: TaskCreateRequestDto) => {
     setIsLoading(true);
     fetch('http://localhost:8080/task', {
       method: 'POST',
@@ -26,7 +44,7 @@ export function Editor(): ReactElement {
       body: JSON.stringify({
         ...formData,
         userId: 'd577e0e8-877b-482f-a7ee-fca43e14aff6',
-      } as TaskDto),
+      } as TaskCreateRequestDto),
     })
       .then((response) => response.json())
       .then((json) => {
@@ -42,7 +60,7 @@ export function Editor(): ReactElement {
       className="editor"
       layout="vertical"
       initialValues={{ language: 'JS' }}
-      onFinish={handleOnFish}
+      onFinish={handleOnFinish}
     >
       <Form.Item
         label="Наименование"
@@ -63,7 +81,13 @@ export function Editor(): ReactElement {
         />
       </Form.Item>
       <Form.Item label="Выберите язык программирования" name="language">
-        <Select>
+        <Select
+          onClick={(event: any) => {
+            if (event.target.tagName === 'DIV') {
+              selectedLanguage = event.target.textContent;
+            }
+          }}
+        >
           <Select.Option value="JS">JS</Select.Option>
         </Select>
       </Form.Item>
@@ -84,7 +108,11 @@ export function Editor(): ReactElement {
         module.exports = isPalindrome;"
         rules={[{ required: true, message: 'Пропущен ответ' }]}
       >
-        <Input.TextArea style={{ height: 200 }} allowClear placeholder="Код" />
+        <CodeMirror
+          height="400px"
+          extensions={[languagesExtension[selectedLanguage]]}
+          placeholder="Код для ответа"
+        />
       </Form.Item>
       <Form.Item
         label="Тесты"
@@ -130,9 +158,9 @@ export function Editor(): ReactElement {
         "
         rules={[{ required: true, message: 'Пропущен код для тестов' }]}
       >
-        <Input.TextArea
-          style={{ height: 200 }}
-          allowClear
+        <CodeMirror
+          height="400px"
+          extensions={[languagesExtension[selectedLanguage]]}
           placeholder="Код для тестов"
         />
       </Form.Item>

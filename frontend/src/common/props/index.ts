@@ -1,1 +1,1 @@
-export type { TaskPreviewProps } from './task/types';
+export type { TaskPreviewProps, TaskModalProps } from './task/types';

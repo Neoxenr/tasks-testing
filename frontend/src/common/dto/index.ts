@@ -1,1 +1,6 @@
-export type { TaskDto, TaskVerifyDto } from './task/types';
+export type {
+  TaskCreateRequestDto,
+  TaskGetRequestDto,
+  TaskVerifyRequestDto,
+  TaskVerifyResponseDto,
+} from './task/types';
