@@ -1,10 +1,10 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { setupListeners } from '@reduxjs/toolkit/dist/query';
-import resultSlice from './slices/result/resultSlice';
+import taskSlice from './slices/taskSlice';
 
 export const store = configureStore({
   reducer: {
-    result: resultSlice,
+    taskReducer: taskSlice,
   },
 });
 

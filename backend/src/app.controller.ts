@@ -1,17 +1,17 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Param, ParseUUIDPipe, Post } from '@nestjs/common';
 import { AppService } from './app.service';
+import { VerifyDto } from './dto/verify.dto';
 
-export type VerifyDto = {
-  repository: string;
-  branch: string;
-};
-
-@Controller()
+@Controller('verify')
 export class AppController {
   constructor(private readonly appService: AppService) {}
 
-  @Post()
-  async verify(@Body() verifyDto: VerifyDto): Promise<any> {
-    return this.appService.verify(verifyDto);
+  @Post(':userId/:taskId')
+  async verify(
+    @Param('userId', ParseUUIDPipe) userId: string,
+    @Param('taskId', ParseUUIDPipe) taskId: string,
+    @Body() verifyDto: VerifyDto,
+  ): Promise<any> {
+    return this.appService.verify(userId, taskId, verifyDto);
   }
 }

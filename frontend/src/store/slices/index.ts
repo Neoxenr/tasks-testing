@@ -1,1 +1,1 @@
-export { setResult } from './result';
+export { addTask, setTasks } from './taskSlice';

@@ -1,6 +1,15 @@
-body {
+:root {
+  --code-field-color: #e8e8e8;
+}
 
-  margin: 0;
+#root {
+
+  display: flex;
+  justify-content: center;
+}
+
+body {
+  background-color: #ecf3fd;
   font-family:
     Roboto,
     -apple-system,
@@ -17,12 +26,23 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+textarea {
+
+  resize: none;
+}
+
+.spinner {
+
+  margin-top: calc(50vh - 25px);
+}
+
 code {
+
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
 
-.ant-layout-content:nth-of-type(1) {
+.ant-layout-content:nth-of-type(1) { 
 
   background-color: #fff;
 }
