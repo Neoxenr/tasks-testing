@@ -10,6 +10,8 @@
 
   .description {
     padding: 10px;
+    border-radius: 6px;
+    border: 1px solid $description-border-color;
     background-color: $description-bg-color;
   }
 
