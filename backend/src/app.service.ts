@@ -1,14 +1,14 @@
-import { sh } from './utilities';
+// Nest JS
 import { Injectable } from '@nestjs/common';
-import { VerifyDto } from './dto/verify.dto';
 
+// DTO
+import { VerifyRequestDto, VerifyResponseDto } from './types/dto/verify';
+
+// Utilities
+import { sh } from './utilities';
 @Injectable()
 export class AppService {
-  async verify(
-    userId: string,
-    taskId: string,
-    verifyDto: VerifyDto,
-  ): Promise<any> {
+  async verify(verifyDto: VerifyRequestDto): Promise<VerifyResponseDto> {
     const testingDirectory = '/var/tmp/testing';
 
     try {
@@ -33,15 +33,15 @@ export class AppService {
 
       const exitStatus = await sh(
         'docker container inspect --format "{{.State.ExitCode}}" $(docker container ls -lq)',
-      ).then(({ stdout }) => stdout.slice(0, stdout.indexOf('\n')));
+      ).then(({ stdout }) => +stdout.slice(0, stdout.indexOf('\n')));
 
       await sh(`docker rm testing-${verifyDto.language}`);
 
       let result = '';
 
-      if (exitStatus === '0') {
+      if (exitStatus === 0) {
         result = 'passed';
-      } else if (exitStatus === '124') {
+      } else if (exitStatus === 124) {
         result = 'failed-infinity';
       } else {
         result = 'failed';
@@ -49,12 +49,10 @@ export class AppService {
 
       const passed = result === 'passed';
 
-      // сохрани в бд
-
       return {
-        passed: passed,
-        output: output,
-        result: result,
+        passed,
+        output,
+        result,
         status: exitStatus,
       };
     } catch (err: any) {

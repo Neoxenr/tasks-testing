@@ -1,0 +1,34 @@
+@use './colors';
+
+* {
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  height: 100%;
+
+  body {
+    background-color: colors.$bg-color;
+    position: relative;
+    height: 100%;
+
+    #root {
+      padding: 50px 0;
+      box-sizing: border-box;
+      min-height: 100%;
+    }
+  }
+}
+
+textarea {
+  resize: none !important;
+}
+
+.spinner {
+  margin-top: calc(50vh - 25px);
+}
+
+.indicator {
+  font-size: 50px;
+}

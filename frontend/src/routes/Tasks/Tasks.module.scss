@@ -1,0 +1,33 @@
+@import '../../styles/colors';
+
+%flex {
+  display: flex;
+  flex-direction: column;
+}
+
+.page {
+  min-height: 100%;
+  row-gap: 30px;
+  @extend %flex;
+  align-items: center;
+
+  .btn {
+    margin-top: 50px;
+  }
+
+  .tasks {
+    @extend %flex;
+    width: 40%;
+    row-gap: 20px;
+  }
+
+  .empty {
+    @extend %flex;
+    align-items: center;
+    justify-content: center;
+    width: 500px;
+    height: 500px;
+    border-radius: 20px;
+    background-color: $empty-bg-color;
+  }
+}

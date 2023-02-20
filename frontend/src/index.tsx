@@ -1,31 +1,22 @@
+// React
 import React from 'react';
+
+// DOM
 import ReactDOM from 'react-dom/client';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
-import { Provider } from 'react-redux';
-import { store } from './store';
+// Router
+import { BrowserRouter } from 'react-router-dom';
 
-import 'antd/dist/antd.css';
-import './index.css';
+// Components
+import App from 'App';
 
-import { Editor } from './components/Editor';
-import { Tasks } from './components/Tasks';
-import { Task } from './components/Tasks/components';
+// SCSS
+import './styles/index.scss';
 
-const root = ReactDOM.createRoot(
-  document.getElementById('root') as HTMLElement,
-);
-
-root.render(
+ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
-    <Provider store={store}>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Tasks />} />
-          <Route path="/editor" element={<Editor />} />
-          <Route path="/task/:id" element={<Task />} />
-        </Routes>
-      </BrowserRouter>
-    </Provider>
-  </React.StrictMode>,
+    <BrowserRouter>
+      <App />
+    </BrowserRouter>
+  </React.StrictMode>
 );

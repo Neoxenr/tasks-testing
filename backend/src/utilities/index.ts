@@ -1,10 +1,13 @@
+// System
 import { exec } from 'child_process';
 
-export async function sh(cmd: string): Promise<any> {
+// Types
+import { ShellResult } from '../types/utilities';
+
+export async function sh(cmd: string): Promise<ShellResult> {
   return new Promise(function (resolve, reject) {
     exec(cmd, (err, stdout, stderr) => {
       if (err) {
-        console.log(err);
         reject(err);
       } else {
         resolve({ stdout, stderr });
