@@ -1,0 +1,11 @@
+.editor {
+  display: flex;
+  margin: 0 auto;
+  flex-direction: column;
+  width: 60%;
+
+  .code {
+    height: 400px;
+    margin-bottom: 45px;
+  }
+}

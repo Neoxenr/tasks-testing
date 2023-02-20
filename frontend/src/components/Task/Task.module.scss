@@ -1,0 +1,27 @@
+@use '../../styles/colors';
+
+.task {
+  width: 100%;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  row-gap: 10px;
+  box-sizing: border-box;
+  border-radius: 15px;
+  background-color: colors.$task-bg-color;
+
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .btnGroup {
+      display: flex;
+
+      .tag {
+        display: flex;
+        align-items: center;
+      }
+    }
+  }
+}

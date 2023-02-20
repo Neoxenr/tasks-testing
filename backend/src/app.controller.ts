@@ -1,17 +1,18 @@
-import { Body, Controller, Param, ParseUUIDPipe, Post } from '@nestjs/common';
+// Nest JS
+import { Body, Controller, Post } from '@nestjs/common';
+
+// Services
 import { AppService } from './app.service';
-import { VerifyDto } from './dto/verify.dto';
+
+// DTO
+import { VerifyRequestDto } from './types/dto/verify';
 
 @Controller('verify')
 export class AppController {
   constructor(private readonly appService: AppService) {}
 
-  @Post(':userId/:taskId')
-  async verify(
-    @Param('userId', ParseUUIDPipe) userId: string,
-    @Param('taskId', ParseUUIDPipe) taskId: string,
-    @Body() verifyDto: VerifyDto,
-  ): Promise<any> {
-    return this.appService.verify(userId, taskId, verifyDto);
+  @Post()
+  async verify(@Body() verifyDto: VerifyRequestDto): Promise<any> {
+    return this.appService.verify(verifyDto);
   }
 }
