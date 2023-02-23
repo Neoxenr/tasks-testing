@@ -7,12 +7,6 @@ import { useParams } from 'react-router-dom';
 // MobX
 import { observer } from 'mobx-react-lite';
 
-// CodeMirror
-import CodeMirror from '@uiw/react-codemirror';
-
-// Language extensions
-import { extensions } from 'config/extensions';
-
 // Antd
 import { Button, Form } from 'antd';
 
@@ -31,6 +25,7 @@ import { Verification } from 'types/entity/verification';
 
 // Components
 import TaskModal from 'components/TaskModal/TaskModal';
+import Code from 'components/Code/Code';
 
 // Config
 import envs from '../../config/environments';
@@ -46,6 +41,8 @@ function Task(): ReactElement {
     isLoading: false
   });
 
+  const [form] = Form.useForm();
+
   const task: TaskType | undefined = useMemo(
     () => tasksStore.getTask(id),
     [id]
@@ -56,6 +53,7 @@ function Task(): ReactElement {
   const handleOnFinish = ({
     solutionCode
   }: Pick<VerificationRequestDto, 'solutionCode'>): void => {
+    console.log('solutionCode :>> ', solutionCode);
     setVerification({ result: null, isLoading: true });
 
     fetch(`${envs.baseApiUrl}/verify`, {
@@ -82,23 +80,20 @@ function Task(): ReactElement {
       <h2 className={styles.title}>{task?.title}</h2>
       <p className={styles.description}>{task?.description}</p>
       <Form
+        form={form}
         className={styles.solution}
         onFinish={handleOnFinish}
         name="solution"
         layout="vertical"
       >
-        <Form.Item
-          className={styles.code}
+        <Code
+          value={task?.mainCode ?? ''}
           label="Решение"
           name="solutionCode"
-          initialValue={task?.mainCode}
-        >
-          <CodeMirror
-            height="400px"
-            extensions={[extensions.JS]}
-            placeholder="Ваше решение"
-          />
-        </Form.Item>
+          placeholder="Ваше решение"
+          ruleMessage="Отсутствует код с решением"
+          callback={form.setFieldValue}
+        />
         <Form.Item>
           <Button loading={isLoading} type="primary" htmlType="submit">
             Проверить задание

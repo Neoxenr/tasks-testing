@@ -1,0 +1,15 @@
+.code {
+  position: relative;
+
+  .formatBtn {
+    position: absolute;
+    right: 20px;
+    top: 50px;
+    z-index: 1;
+  }
+  
+  .codeField {
+    height: 400px;
+    margin-bottom: 60px;
+  }
+}
