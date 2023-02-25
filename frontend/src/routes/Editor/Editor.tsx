@@ -75,7 +75,7 @@ function Editor(): ReactElement {
         <Input placeholder="Название образа" />
       </Form.Item>
       <Code
-        value="function isPalindrome(str) {for (let i = 0; i < str.length / 2; i++) { if (str.charAt(i) != str.charAt(str.length - i - 1)) {return false;}}return true;}module.exports = isPalindrome;"
+        value="export function isPalindrome(str) {for (let i = 0; i < str.length / 2; i++) { if (str.charAt(i) != str.charAt(str.length - i - 1)) {return false;}}return true;}"
         label="Ответ"
         name="mainCode"
         ruleMessage="Пропущен ответ"
@@ -83,7 +83,7 @@ function Editor(): ReactElement {
         callback={form.setFieldValue}
       />
       <Code
-        value="var isPalindrome = require('./index');describe('String should be a palindrome', () => {  it('Test 1', () => {    const str = '11211';    expect(isPalindrome(str)).toBeTruthy();  });  it('Test 2', () => {    const str = 'abcghgcba';    expect(isPalindrome(str)).toBeTruthy();  });  it('Test 3', () => {    const str = '';    expect(isPalindrome(str)).toBeTruthy();  });});describe('String shouldnt be a palindrome', () => {  it('Test 1', () => {    const str = '123456';    expect(isPalindrome(str)).toBeFalsy();  });  it('Test 2', () => {    const str = 'abaaabbb';    expect(isPalindrome(str)).toBeFalsy();  });  it('Test 3', () => {    const str = 'adsadadadaaaadaddad';    expect(isPalindrome(str)).toBeFalsy();  });});"
+        value="import {isPalindrome} from './index';describe('String should be a palindrome', () => {  it('Test 1', () => {    const str = '11211';    expect(isPalindrome(str)).toBeTruthy();  });  it('Test 2', () => {    const str = 'abcghgcba';    expect(isPalindrome(str)).toBeTruthy();  });  it('Test 3', () => {    const str = '';    expect(isPalindrome(str)).toBeTruthy();  });});describe('String shouldnt be a palindrome', () => {  it('Test 1', () => {    const str = '123456';    expect(isPalindrome(str)).toBeFalsy();  });  it('Test 2', () => {    const str = 'abaaabbb';    expect(isPalindrome(str)).toBeFalsy();  });  it('Test 3', () => {    const str = 'adsadadadaaaadaddad';    expect(isPalindrome(str)).toBeFalsy();  });});"
         label="Тесты"
         name="testCode"
         ruleMessage="Пропущен код для тестов"
