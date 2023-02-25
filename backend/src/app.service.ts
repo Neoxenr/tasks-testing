@@ -24,12 +24,10 @@ export class AppService {
           );
       }
 
-      let output = '';
-
-      await sh(
+      const { stdout: output } = await sh(
         `docker run --name testing-${verifyDto.language} -v ${testingDirectory}:/app/task \
-        ${verifyDto.dockerImageName}:latest npm test 2>&1 | tee ${testingDirectory}/output`,
-      ).then(({ stdout }) => (output = stdout));
+        ${verifyDto.dockerImageName}:latest`,
+      );
 
       const exitStatus = await sh(
         'docker container inspect --format "{{.State.ExitCode}}" $(docker container ls -lq)',
