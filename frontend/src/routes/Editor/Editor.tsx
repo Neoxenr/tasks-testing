@@ -83,7 +83,7 @@ function Editor(): ReactElement {
         callback={form.setFieldValue}
       />
       <Code
-        value="import {isPalindrome} from './index';describe('String should be a palindrome', () => {  it('Test 1', () => {    const str = '11211';    expect(isPalindrome(str)).toBeTruthy();  });  it('Test 2', () => {    const str = 'abcghgcba';    expect(isPalindrome(str)).toBeTruthy();  });  it('Test 3', () => {    const str = '';    expect(isPalindrome(str)).toBeTruthy();  });});describe('String shouldnt be a palindrome', () => {  it('Test 1', () => {    const str = '123456';    expect(isPalindrome(str)).toBeFalsy();  });  it('Test 2', () => {    const str = 'abaaabbb';    expect(isPalindrome(str)).toBeFalsy();  });  it('Test 3', () => {    const str = 'adsadadadaaaadaddad';    expect(isPalindrome(str)).toBeFalsy();  });});"
+        value="import assert from 'assert'; import {    isPalindrome} from './index.js';describe('String should be a palindrome', () => {    it('Test 1', () => {        const str = '11211';        assert.ok(isPalindrome(str));    });    it('Test 2', () => {        const str = 'abcghgcba';        assert.ok(isPalindrome(str));    });    it('Test 3', () => {        const str = '';        assert.ok(isPalindrome(str));    });});describe('String shouldnt be a palindrome', () => {    it('Test 1', () => {        const str = '123456';        assert(isPalindrome(str) === false);    });    it('Test 2', () => {        const str = 'abaaabbb';        assert(isPalindrome(str) === false);    });    it('Test 3', () => {        const str = 'adsadadadaaaadaddad';        assert(isPalindrome(str) === false);    });});"
         label="Тесты"
         name="testCode"
         ruleMessage="Пропущен код для тестов"

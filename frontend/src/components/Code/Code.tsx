@@ -1,11 +1,5 @@
 // React
-import React, {
-  ReactElement,
-  useCallback,
-  useEffect,
-  useMemo,
-  useState
-} from 'react';
+import React, { ReactElement, useEffect, useMemo, useState } from 'react';
 
 // Formatting
 import jsBeautify from 'js-beautify';

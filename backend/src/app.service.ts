@@ -26,7 +26,7 @@ export class AppService {
 
       const { stdout: output } = await sh(
         `docker run --name testing-${verifyDto.language} -v ${testingDirectory}:/app/task \
-        ${verifyDto.dockerImageName}:latest`,
+        ${verifyDto.dockerImageName}:latest 2>&1 | tee \`pwd\`/output`,
       );
 
       const exitStatus = await sh(
