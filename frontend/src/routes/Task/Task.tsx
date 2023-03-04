@@ -53,7 +53,6 @@ function Task(): ReactElement {
   const handleOnFinish = ({
     solutionCode
   }: Pick<VerificationRequestDto, 'solutionCode'>): void => {
-    console.log('solutionCode :>> ', solutionCode);
     setVerification({ result: null, isLoading: true });
 
     fetch(`${envs.baseApiUrl}/verify`, {
@@ -62,10 +61,12 @@ function Task(): ReactElement {
         'Content-Type': 'application/json'
       }),
       body: JSON.stringify({
-        solutionCode,
         language: task?.language,
-        testCode: task?.testCode,
-        dockerImageName: task?.dockerImageName
+        dockerImageName: task?.dockerImageName,
+        solutionFileName: task?.mainFileName,
+        solutionCode,
+        testFileName: task?.testFileName,
+        testCode: task?.testCode
       })
     })
       .then((response) => response.json())

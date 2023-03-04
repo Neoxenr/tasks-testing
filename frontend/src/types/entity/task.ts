@@ -4,6 +4,8 @@ export interface Task {
   description: string;
   language: string;
   dockerImageName: string;
+  mainFileName: string;
   mainCode: string;
+  testFileName: string;
   testCode: string;
 }

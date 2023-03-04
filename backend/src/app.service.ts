@@ -16,17 +16,14 @@ export class AppService {
 
       await sh(`mkdir ${testingDirectory}`);
 
-      switch (verifyDto.language) {
-        case 'JS':
-          await sh(
-            `echo "${verifyDto.solutionCode}" > ${testingDirectory}/index.js && \ 
-            echo "${verifyDto.testCode}" > ${testingDirectory}/test.js`,
-          );
-      }
+      await sh(
+        `echo "${verifyDto.solutionCode}" > ${testingDirectory}/${verifyDto.solutionFileName} && \ 
+        echo "${verifyDto.testCode}" > ${testingDirectory}/${verifyDto.testFileName}`,
+      );
 
       const { stdout: output } = await sh(
         `docker run --name testing-${verifyDto.language} -v ${testingDirectory}:/app/task \
-        ${verifyDto.dockerImageName}:latest 2>&1 | tee \`pwd\`/output`,
+        ${verifyDto.dockerImageName}:latest 2>&1 | tee ${testingDirectory}/output`,
       );
 
       const exitStatus = await sh(

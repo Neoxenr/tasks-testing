@@ -74,6 +74,14 @@ function Editor(): ReactElement {
       >
         <Input placeholder="Название образа" />
       </Form.Item>
+      <Form.Item
+        label="Название файла для ответа"
+        name="mainFileName"
+        initialValue="index.js"
+        rules={[{ required: true, message: 'Не указано название файла' }]}
+      >
+        <Input placeholder="Название файла для ответа" />
+      </Form.Item>
       <Code
         value="export function isPalindrome(str) {for (let i = 0; i < str.length / 2; i++) { if (str.charAt(i) != str.charAt(str.length - i - 1)) {return false;}}return true;}"
         label="Ответ"
@@ -82,6 +90,14 @@ function Editor(): ReactElement {
         placeholder="Код для ответа"
         callback={form.setFieldValue}
       />
+      <Form.Item
+        label="Название файла для тестов"
+        name="testFileName"
+        initialValue="test.js"
+        rules={[{ required: true, message: 'Не указано название файла' }]}
+      >
+        <Input placeholder="Название файла для тестов" />
+      </Form.Item>
       <Code
         value="import assert from 'assert'; import {isPalindrome} from './index.js';describe('Строка должна быть палиндромом', () => {    it('Тест 1', () => {        const str = '11211';        assert.ok(isPalindrome(str));    });    it('Тест 2', () => {        const str = 'abcghgcba';        assert.ok(isPalindrome(str));    });    it('Тест 3', () => {        const str = '';        assert.ok(isPalindrome(str));    });});describe('Строка не должна быть палиндромом', () => {    it('Тест 1', () => {        const str = '123456';        assert(isPalindrome(str) === false);    });    it('Тест 2', () => {        const str = 'abaaabbb';        assert(isPalindrome(str) === false);    });    it('Тест 3', () => {        const str = 'adsadadadaaaadaddad';        assert(isPalindrome(str) === false);    });});"
         label="Тесты"
