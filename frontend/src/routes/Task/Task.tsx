@@ -102,7 +102,7 @@ function Task(): ReactElement {
       </Form>
       <TaskModal isOpen={result !== null}>
         <div>{`PASSED: ${result?.passed.toString()}`}</div>
-        <div>{`OUTPUT: ${result?.output}`}</div>
+        <pre>{`OUTPUT: ${result?.output}`}</pre>
         <div>{`RESULT: ${result?.result}`}</div>
         <div>{`STATUS: ${result?.status}`}</div>
       </TaskModal>

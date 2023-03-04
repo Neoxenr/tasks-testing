@@ -19,6 +19,7 @@ function TaskModal({ isOpen, children }: TaskModalProps): ReactElement {
 
   return (
     <Modal
+      width={800}
       title="Результаты проверки"
       open={isModalOpened}
       onOk={handleOk}
