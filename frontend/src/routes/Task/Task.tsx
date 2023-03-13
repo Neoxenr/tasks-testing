@@ -36,12 +36,12 @@ import styles from './Task.module.scss';
 function Task(): ReactElement {
   const { id } = useParams();
 
+  const [form] = Form.useForm();
+
   const [verification, setVerification] = useState<VerificationResponseDto>({
     result: null,
     isLoading: false
   });
-
-  const [form] = Form.useForm();
 
   const task: TaskType | undefined = useMemo(
     () => tasksStore.getTask(id),
@@ -78,8 +78,10 @@ function Task(): ReactElement {
 
   return (
     <div className={styles.page}>
-      <h2 className={styles.title}>{task?.title}</h2>
-      <p className={styles.description}>{task?.description}</p>
+      <h2 className={styles.title}>{task?.title ?? 'Без названия'}</h2>
+      <p className={styles.description}>
+        {task?.description ?? 'Описание отсутствует'}
+      </p>
       <Form
         form={form}
         className={styles.solution}
@@ -88,6 +90,7 @@ function Task(): ReactElement {
         layout="vertical"
       >
         <Code
+          language={task?.language ?? 'JS'}
           value={task?.mainCode ?? ''}
           label="Решение"
           name="solutionCode"

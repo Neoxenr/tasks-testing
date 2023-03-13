@@ -19,7 +19,9 @@ function TaskModal({ isOpen, children }: TaskModalProps): ReactElement {
 
   return (
     <Modal
-      width={800}
+      centered
+      width={1000}
+      bodyStyle={{ overflowX: 'auto' }}
       title="Результаты проверки"
       open={isModalOpened}
       onOk={handleOk}

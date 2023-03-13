@@ -1,5 +1,5 @@
 // Nest JS
-import { Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common/decorators/core/injectable.decorator';
 
 // DTO
 import { VerifyRequestDto, VerifyResponseDto } from './types/dto/verify';
@@ -12,9 +12,10 @@ export class AppService {
     const testingDirectory = '/var/tmp/testing';
 
     try {
-      await sh(`docker pull ${verifyDto.dockerImageName}`);
-
-      await sh(`mkdir ${testingDirectory}`);
+      await Promise.all([
+        sh(`docker pull ${verifyDto.dockerImageName}`),
+        sh(`mkdir ${testingDirectory}`),
+      ]);
 
       await sh(
         `echo "${verifyDto.solutionCode}" > ${testingDirectory}/${verifyDto.solutionFileName} && \ 
@@ -22,7 +23,8 @@ export class AppService {
       );
 
       const { stdout: output } = await sh(
-        `docker run --name testing-${verifyDto.language} -v ${testingDirectory}:/app/task \
+        `docker run --name testing-${verifyDto.language} -v \
+        ${testingDirectory}:\`docker image inspect -f '{{.Config.WorkingDir}}' ${verifyDto.dockerImageName}\`/task \
         ${verifyDto.dockerImageName}:latest 2>&1 | tee ${testingDirectory}/output`,
       );
 
@@ -53,7 +55,7 @@ export class AppService {
     } catch (err: any) {
       return { passed: false, output: '', result: 'failed', status: 1 };
     } finally {
-      await sh(`rm -rf ${testingDirectory}`);
+      await sh(`sudo -i rm -rf ${testingDirectory}`);
     }
   }
 }
