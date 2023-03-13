@@ -1,5 +1,5 @@
 // React
-import React, { ReactElement } from 'react';
+import React, { ReactElement, useState } from 'react';
 
 // Router
 import { useNavigate, NavigateFunction } from 'react-router-dom';
@@ -15,6 +15,7 @@ import tasksStore from 'stores/TasksStore';
 
 // Types
 import { TaskCreateDto } from 'types/dto/task';
+import { Languages } from 'types/languages';
 
 // Components
 import Code from 'components/Code/Code';
@@ -26,6 +27,12 @@ function Editor(): ReactElement {
   const navigate: NavigateFunction = useNavigate();
 
   const [form] = Form.useForm();
+
+  const [language, setLanguage] = useState<Languages>('JS');
+
+  const selectLanguage = (lang: Languages): void => {
+    setLanguage(lang);
+  };
 
   const handleOnFinish = (task: TaskCreateDto): void => {
     tasksStore.addTask(task);
@@ -39,21 +46,13 @@ function Editor(): ReactElement {
       name="editor"
       className={styles.editor}
       layout="vertical"
-      initialValues={{ language: 'JS' }}
+      initialValues={{ language }}
       onFinish={handleOnFinish}
     >
-      <Form.Item
-        label="Наименование"
-        name="title"
-        initialValue="Title for test task"
-      >
+      <Form.Item label="Наименование" name="title">
         <Input placeholder="Название задания" />
       </Form.Item>
-      <Form.Item
-        label="Описание"
-        name="description"
-        initialValue="Description for test task"
-      >
+      <Form.Item label="Описание" name="description">
         <Input.TextArea
           style={{ height: 120 }}
           allowClear
@@ -61,29 +60,44 @@ function Editor(): ReactElement {
         />
       </Form.Item>
       <Form.Item label="Выберите язык программирования" name="language">
-        <Select>
+        <Select onSelect={selectLanguage}>
           <Select.Option value="JS">JS</Select.Option>
-          <Select.Option value="Java">Java</Select.Option>
+          <Select.Option value="Python">Python</Select.Option>
         </Select>
       </Form.Item>
       <Form.Item
         label="Docker-образ"
         name="dockerImageName"
-        initialValue="neoxenr/js"
         rules={[{ required: true, message: 'Не указан Docker-образ' }]}
       >
         <Input placeholder="Название образа" />
       </Form.Item>
+      <Form.Item
+        label="Название файла для ответа"
+        name="mainFileName"
+        rules={[{ required: true, message: 'Не указано название файла' }]}
+      >
+        <Input placeholder="Название файла для ответа" />
+      </Form.Item>
       <Code
-        value="export function isPalindrome(str) {for (let i = 0; i < str.length / 2; i++) { if (str.charAt(i) != str.charAt(str.length - i - 1)) {return false;}}return true;}"
+        language={language}
+        value=""
         label="Ответ"
         name="mainCode"
         ruleMessage="Пропущен ответ"
         placeholder="Код для ответа"
         callback={form.setFieldValue}
       />
+      <Form.Item
+        label="Название файла для тестов"
+        name="testFileName"
+        rules={[{ required: true, message: 'Не указано название файла' }]}
+      >
+        <Input placeholder="Название файла для тестов" />
+      </Form.Item>
       <Code
-        value="import {isPalindrome} from './index';describe('String should be a palindrome', () => {  it('Test 1', () => {    const str = '11211';    expect(isPalindrome(str)).toBeTruthy();  });  it('Test 2', () => {    const str = 'abcghgcba';    expect(isPalindrome(str)).toBeTruthy();  });  it('Test 3', () => {    const str = '';    expect(isPalindrome(str)).toBeTruthy();  });});describe('String shouldnt be a palindrome', () => {  it('Test 1', () => {    const str = '123456';    expect(isPalindrome(str)).toBeFalsy();  });  it('Test 2', () => {    const str = 'abaaabbb';    expect(isPalindrome(str)).toBeFalsy();  });  it('Test 3', () => {    const str = 'adsadadadaaaadaddad';    expect(isPalindrome(str)).toBeFalsy();  });});"
+        language={language}
+        value=""
         label="Тесты"
         name="testCode"
         ruleMessage="Пропущен код для тестов"

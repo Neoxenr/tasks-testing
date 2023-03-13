@@ -1,11 +1,5 @@
 // React
-import React, {
-  ReactElement,
-  useCallback,
-  useEffect,
-  useMemo,
-  useState
-} from 'react';
+import React, { ReactElement, useEffect, useMemo, useState } from 'react';
 
 // Formatting
 import jsBeautify from 'js-beautify';
@@ -15,6 +9,7 @@ import CodeMirror from '@uiw/react-codemirror';
 
 // Antd
 import { Form, Button, Tooltip } from 'antd';
+import { NamePath } from 'antd/es/form/interface';
 
 // Antd icons
 import { CodeOutlined } from '@ant-design/icons';
@@ -22,19 +17,24 @@ import { CodeOutlined } from '@ant-design/icons';
 // Language extensions
 import { extensions } from 'config/extensions';
 
+// Types
+import { Languages } from 'types/languages';
+
 // SCSS
 import styles from './Code.module.scss';
 
 interface CodeProps {
+  language: Languages;
   value: string;
   label: string;
   name: string;
   placeholder: string;
   ruleMessage: string;
-  callback: any;
+  callback: (name: NamePath, value: any) => void;
 }
 
 function Code({
+  language,
   value,
   label,
   name,
@@ -75,7 +75,7 @@ function Code({
           onChange={(newCode: string) => setCode(newCode)}
           value={code}
           height="400px"
-          extensions={[extensions.JS]}
+          extensions={[extensions[language]]}
           placeholder={placeholder}
         />
       </Form.Item>

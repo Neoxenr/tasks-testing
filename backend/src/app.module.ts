@@ -1,5 +1,5 @@
 // Nest JS
-import { Module } from '@nestjs/common';
+import { Module } from '@nestjs/common/decorators/modules/module.decorator';
 
 // Controllers
 import { AppController } from './app.controller';

@@ -1,5 +1,5 @@
 // MobX
-import { action, makeObservable, observable } from 'mobx';
+import { observable, action, makeObservable } from 'mobx';
 
 // Entities
 import { Task } from 'types/entity/task';

@@ -36,12 +36,12 @@ import styles from './Task.module.scss';
 function Task(): ReactElement {
   const { id } = useParams();
 
+  const [form] = Form.useForm();
+
   const [verification, setVerification] = useState<VerificationResponseDto>({
     result: null,
     isLoading: false
   });
-
-  const [form] = Form.useForm();
 
   const task: TaskType | undefined = useMemo(
     () => tasksStore.getTask(id),
@@ -53,7 +53,6 @@ function Task(): ReactElement {
   const handleOnFinish = ({
     solutionCode
   }: Pick<VerificationRequestDto, 'solutionCode'>): void => {
-    console.log('solutionCode :>> ', solutionCode);
     setVerification({ result: null, isLoading: true });
 
     fetch(`${envs.baseApiUrl}/verify`, {
@@ -62,10 +61,12 @@ function Task(): ReactElement {
         'Content-Type': 'application/json'
       }),
       body: JSON.stringify({
-        solutionCode,
         language: task?.language,
-        testCode: task?.testCode,
-        dockerImageName: task?.dockerImageName
+        dockerImageName: task?.dockerImageName,
+        solutionFileName: task?.mainFileName,
+        solutionCode,
+        testFileName: task?.testFileName,
+        testCode: task?.testCode
       })
     })
       .then((response) => response.json())
@@ -77,8 +78,10 @@ function Task(): ReactElement {
 
   return (
     <div className={styles.page}>
-      <h2 className={styles.title}>{task?.title}</h2>
-      <p className={styles.description}>{task?.description}</p>
+      <h2 className={styles.title}>{task?.title ?? 'Без названия'}</h2>
+      <p className={styles.description}>
+        {task?.description ?? 'Описание отсутствует'}
+      </p>
       <Form
         form={form}
         className={styles.solution}
@@ -87,6 +90,7 @@ function Task(): ReactElement {
         layout="vertical"
       >
         <Code
+          language={task?.language ?? 'JS'}
           value={task?.mainCode ?? ''}
           label="Решение"
           name="solutionCode"
@@ -102,7 +106,7 @@ function Task(): ReactElement {
       </Form>
       <TaskModal isOpen={result !== null}>
         <div>{`PASSED: ${result?.passed.toString()}`}</div>
-        <div>{`OUTPUT: ${result?.output}`}</div>
+        <pre>{`OUTPUT: ${result?.output}`}</pre>
         <div>{`RESULT: ${result?.result}`}</div>
         <div>{`STATUS: ${result?.status}`}</div>
       </TaskModal>
