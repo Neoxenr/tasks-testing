@@ -1,8 +1,5 @@
 // React
-import React, { ReactElement, useEffect, useMemo, useState } from 'react';
-
-// Formatting
-import jsBeautify from 'js-beautify';
+import React, { ReactElement, useEffect, useState } from 'react';
 
 // CodeMirror
 import CodeMirror from '@uiw/react-codemirror';
@@ -44,14 +41,42 @@ function Code({
 }: CodeProps): ReactElement {
   const [code, setCode] = useState<string>('');
 
-  const valueMemo = useMemo(() => jsBeautify(value), [value]);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const handleOnClick = (): void => {
-    callback(name, jsBeautify(code));
+  const handleOnClick = async (): Promise<void> => {
+    setIsLoading(true);
+
+    const { url, field } = extensions[language].formatter;
+
+    let body = null;
+
+    if (field) {
+      const formData = new FormData();
+      formData.append(field, code);
+
+      body = new URLSearchParams(formData as any);
+    } else {
+      body = code;
+    }
+
+    const response = await fetch(url, {
+      body,
+      method: 'POST'
+    });
+
+    if (response.status < 200 || response.status >= 300) {
+      callback(name, code);
+    } else {
+      const text = await response.text();
+
+      callback(name, text);
+    }
+
+    setIsLoading(false);
   };
 
   useEffect(() => {
-    setCode(valueMemo);
+    setCode(value);
   }, [value]);
 
   return (
@@ -62,20 +87,21 @@ function Code({
           type="primary"
           icon={<CodeOutlined />}
           onClick={handleOnClick}
+          loading={isLoading}
         />
       </Tooltip>
       <Form.Item
         className={styles.codeField}
         label={label}
         name={name}
-        initialValue={valueMemo}
+        initialValue={value}
         rules={[{ required: true, message: ruleMessage }]}
       >
         <CodeMirror
           onChange={(newCode: string) => setCode(newCode)}
           value={code}
           height="400px"
-          extensions={[extensions[language]]}
+          extensions={[extensions[language].lang]}
           placeholder={placeholder}
         />
       </Form.Item>
