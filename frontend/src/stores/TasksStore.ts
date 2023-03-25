@@ -5,7 +5,7 @@ import { observable, action, makeObservable } from 'mobx';
 import { Task } from 'types/entity/task';
 
 // Dtos
-import { TaskCreateDto } from 'types/dto/task';
+import { TaskCreateDto, TaskEditDto } from 'types/dto/task';
 
 class TasksStore {
   @observable
@@ -16,8 +16,17 @@ class TasksStore {
   }
 
   @action
-  addTask = (task: TaskCreateDto): void => {
-    this.tasks = [...this.tasks, { id: crypto.randomUUID(), ...task }];
+  addTask = (dto: TaskCreateDto): void => {
+    this.tasks = [...this.tasks, { id: crypto.randomUUID(), ...dto }];
+
+    localStorage.setItem('tasks', JSON.stringify(this.tasks));
+  };
+
+  @action
+  editTask = (id: string | undefined, dto: TaskEditDto): void => {
+    const index = this.tasks.findIndex((item: Task) => item.id === id);
+
+    this.tasks[index] = { ...this.tasks[index], ...dto };
 
     localStorage.setItem('tasks', JSON.stringify(this.tasks));
   };
@@ -30,8 +39,14 @@ class TasksStore {
   };
 
   @action
-  getTask = (id: string | undefined): Task | undefined => {
-    return this.tasks.find((item: Task) => item.id === id);
+  getTask = (id: string | undefined): Task => {
+    const task = this.tasks.find((item: Task) => item.id === id);
+
+    if (!task) {
+      throw new TypeError('The task not found');
+    }
+
+    return task;
   };
 }
 

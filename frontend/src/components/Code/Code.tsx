@@ -21,6 +21,7 @@ import { Languages } from 'types/languages';
 import styles from './Code.module.scss';
 
 interface CodeProps {
+  isChecking?: boolean;
   language: Languages;
   value: string;
   label: string;
@@ -31,6 +32,7 @@ interface CodeProps {
 }
 
 function Code({
+  isChecking,
   language,
   value,
   label,
@@ -103,6 +105,7 @@ function Code({
           height="400px"
           extensions={[extensions[language].lang]}
           placeholder={placeholder}
+          readOnly={isLoading || isChecking}
         />
       </Form.Item>
     </div>

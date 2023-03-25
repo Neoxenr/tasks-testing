@@ -10,3 +10,5 @@ export interface TaskCreateDto {
   testFileName: string;
   testCode: string;
 }
+
+export type TaskEditDto = Partial<TaskCreateDto>;

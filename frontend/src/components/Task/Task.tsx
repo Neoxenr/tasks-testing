@@ -8,7 +8,7 @@ import { useNavigate, NavigateFunction } from 'react-router-dom';
 import { Button, Tag } from 'antd';
 
 // Antd icons
-import { CloseOutlined } from '@ant-design/icons';
+import { CloseOutlined, EditOutlined } from '@ant-design/icons';
 
 // Config
 import { TAG_COLORS } from 'config/tag-colors';
@@ -25,8 +25,12 @@ import styles from './Task.module.scss';
 function Task({ id, title, language, description }: TaskProps): ReactElement {
   const navigate: NavigateFunction = useNavigate();
 
-  const handleOnClick = (): void => {
+  const handleOnDelete = (): void => {
     tasksStore.removeTask(id);
+  };
+
+  const handleOnEdit = (): void => {
+    navigate(`/tasks/${id}/edit`);
   };
 
   return (
@@ -37,11 +41,18 @@ function Task({ id, title, language, description }: TaskProps): ReactElement {
           <Tag className={styles.tag} color={TAG_COLORS[language]}>
             {language}
           </Tag>
-          <Button
-            type="primary"
-            icon={<CloseOutlined />}
-            onClick={handleOnClick}
-          />
+          <div className={styles.btns}>
+            <Button
+              type="primary"
+              icon={<EditOutlined />}
+              onClick={handleOnEdit}
+            />
+            <Button
+              type="primary"
+              icon={<CloseOutlined />}
+              onClick={handleOnDelete}
+            />
+          </div>
         </div>
       </div>
       <p className={styles.description}>

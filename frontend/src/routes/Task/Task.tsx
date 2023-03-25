@@ -90,6 +90,7 @@ function Task(): ReactElement {
         layout="vertical"
       >
         <Code
+          isChecking={isLoading}
           language={task?.language ?? 'JS'}
           value={task?.mainCode ?? ''}
           label="Решение"
