@@ -36,7 +36,7 @@ function Task({ id, title, language, description }: TaskProps): ReactElement {
   return (
     <div className={styles.task}>
       <div className={styles.header}>
-        <h3 className={styles.title}>{title ?? 'Без названия'}</h3>
+        <h3 className={styles.title}>{title || 'Без названия'}</h3>
         <div className={styles.btnGroup}>
           <Tag className={styles.tag} color={TAG_COLORS[language]}>
             {language}
@@ -56,7 +56,7 @@ function Task({ id, title, language, description }: TaskProps): ReactElement {
         </div>
       </div>
       <p className={styles.description}>
-        {description ?? 'Описание отсутствует'}
+        {description || 'Описание отсутствует'}
       </p>
       <Button
         className={styles.btn}

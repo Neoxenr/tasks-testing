@@ -48,6 +48,18 @@ function Task(): ReactElement {
     [id]
   );
 
+  const {
+    title,
+    description,
+    language,
+    dockerImageName,
+    dockerMountingDirectoryName,
+    mainFileName,
+    mainCode,
+    testFileName,
+    testCode
+  } = task;
+
   const { result, isLoading } = verification;
 
   const handleOnFinish = ({
@@ -61,12 +73,13 @@ function Task(): ReactElement {
         'Content-Type': 'application/json'
       }),
       body: JSON.stringify({
-        language: task?.language,
-        dockerImageName: task?.dockerImageName,
-        solutionFileName: task?.mainFileName,
+        language,
+        dockerImageName,
+        dockerMountingDirectoryName,
+        solutionFileName: mainFileName,
         solutionCode,
-        testFileName: task?.testFileName,
-        testCode: task?.testCode
+        testFileName,
+        testCode
       })
     })
       .then((response) => response.json())
@@ -78,9 +91,9 @@ function Task(): ReactElement {
 
   return (
     <div className={styles.page}>
-      <h2 className={styles.title}>{task?.title ?? 'Без названия'}</h2>
+      <h2 className={styles.title}>{title || 'Без названия'}</h2>
       <p className={styles.description}>
-        {task?.description ?? 'Описание отсутствует'}
+        {description || 'Описание отсутствует'}
       </p>
       <Form
         form={form}
@@ -91,8 +104,8 @@ function Task(): ReactElement {
       >
         <Code
           isChecking={isLoading}
-          language={task?.language ?? 'JS'}
-          value={task?.mainCode ?? ''}
+          language={language ?? 'JS'}
+          value={mainCode ?? ''}
           label="Решение"
           name="solutionCode"
           placeholder="Ваше решение"

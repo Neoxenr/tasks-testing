@@ -33,6 +33,7 @@ function Form({
     description,
     language,
     dockerImageName,
+    dockerMountingDirectoryName,
     mainFileName,
     mainCode,
     testFileName,
@@ -56,6 +57,7 @@ function Form({
         language,
         description,
         dockerImageName,
+        dockerMountingDirectoryName,
         mainFileName,
         testFileName
       }}
@@ -83,6 +85,18 @@ function Form({
         rules={[{ required: true, message: 'Не указан Docker-образ' }]}
       >
         <Input placeholder="Название образа" />
+      </FormAntd.Item>
+      <FormAntd.Item
+        label="Название папки для монтирования"
+        name="dockerMountingDirectoryName"
+        rules={[
+          {
+            required: true,
+            message: 'Не указано название папки для монтирования'
+          }
+        ]}
+      >
+        <Input placeholder="Название папки для монтирования" />
       </FormAntd.Item>
       <FormAntd.Item
         label="Название файла для ответа"

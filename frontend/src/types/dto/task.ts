@@ -5,6 +5,7 @@ export interface TaskCreateDto {
   description: string;
   language: Languages;
   dockerImageName: string;
+  dockerMountingDirectoryName: string;
   mainFileName: string;
   mainCode: string;
   testFileName: string;
